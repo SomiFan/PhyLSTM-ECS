@@ -65,7 +65,7 @@ for model_indicator in range(0,3):
     # create models
     tf.reset_default_graph()
     model_class = models[model_indicator]
-
+# 创建模型，把所有的训练数据ttrain，xtrain，Y_noise_train传给这个模型
     model = model_class(t=t_train,
                         X=X_train,
                         Y=Y_noise_train,
@@ -76,7 +76,7 @@ for model_indicator in range(0,3):
     if mname != 'NN': model.load_weather_data(train_data = train_weather_data)
     model.use_scipy_opt = False
 
-    # Training
+    # Training 训练模型
     Training_returns = model.train(iterations)
 
     # Saving
