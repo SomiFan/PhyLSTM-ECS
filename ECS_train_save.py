@@ -30,6 +30,7 @@ locations = ['res/models/ECS/NN',
 # --------------------------------------------------------------------------------------------------
 data = pd.read_csv('res/simulation/data/ECS_Tower_simulated_data-35040-2020-11-28-00-02.csv')
 weather_data = pd.read_csv('res/simulation/data/Weatherdata_forfile_2020-11-28-00-02.csv')
+# 把数据中Date_time这列的每个元素转化成第几小时（小时+分钟除以60=小数形式的小时）忽略年月日信息
 data[['hour_of_day']] = pd.DataFrame([(x.hour + x.minute/60) for x in pd.to_datetime(data['Date_time'])])
 save_d = []
 train_sample = []
@@ -40,17 +41,17 @@ activation = tf.keras.activations.sigmoid
 start_from = slot_per_hour * 24
 data = data.iloc[start_from:]
 X_cols = ['Power_fan_1', 'Power_fan_2']
-T_cols = ['hour_of_day']  # this is the time slot of the recorded data
+T_cols = ['hour_of_day']  # this is the time slot of the recorded data 以小数形式的小时作为timeslot
 Y_noisy_cols = ['Tb_noise']
 Y_cols = ['Tb']
 
 Train_data = data.iloc[:,:].sort_values('time')
 train_weather_data = np.array(weather_data.loc[weather_data['time'].isin(Train_data['time'])].sort_values('time') )
 
-Train_dt = np.array(Train_data[['Date_time']])
+Train_dt = np.array(Train_data[['Date_time']]) #这个根本没有用到
 t_train = np.array(Train_data[T_cols])
 X_train = np.array(Train_data[X_cols])
-Y_train = np.array(Train_data[Y_cols])
+Y_train = np.array(Train_data[Y_cols]) #这个也没用到
 Y_noise_train = np.array(Train_data[Y_noisy_cols])
 
 for model_indicator in range(0,3):
